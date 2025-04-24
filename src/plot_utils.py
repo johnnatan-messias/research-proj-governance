@@ -4,7 +4,7 @@ from statsmodels.distributions.empirical_distribution import ECDF
 import numpy as np
 
 # The two lines below mitigate the issue with MathJax rendering in Kaleido and messing up plotly plots.
-import plotly.io as pio   
+import plotly.io as pio
 pio.kaleido.scope.mathjax = None
 
 plt.rcParams["figure.figsize"] = [8.5, 4.5]
@@ -66,7 +66,7 @@ colors = {
     "white": "#ffffff",
     "light_purple": "#cab2d6"
 }
-
+percentiles = [.01, .05, .1, .2, .25, .50, .75, .8, .9, .95, .99]
 
 def get_plotly_layout(width, height):
     layout = go.Layout(
@@ -187,70 +187,76 @@ def plot_ohlc(series, title="", width=850, height=450):
     return fig
 
 
-def plot_heatmap_votes(df, zmin=0, zmax=2, tickvals=[0, 1, 2], xgap=1, ygap=1, colorbarlen=200, colorscale=None, ticktext=['Against', 'In-favor', 'Abstain']):
-    fig = go.Figure(layout=get_plotly_layout(width=1540, height=380))
+def plot_heatmap_votes(df,
+                       zmin=0,
+                       zmax=2,
+                       tickvals=[0, 1, 2],
+                       ticktext=['Against', 'In-favor', 'Abstain'],
+                       xgap=1,
+                       ygap=1,
+                       colorbarlen=200,
+                       colorscale=None,
+                       colorbar_title=""):
+    """
+    Plot a heatmap of voting behavior.
+
+    Parameters:
+    - df (pd.DataFrame): DataFrame with voters as rows and proposals as columns.
+    - zmin, zmax (int): Range of values for heatmap color scaling.
+    - tickvals, ticktext (list): Tick values and labels for the colorbar.
+    - xgap, ygap (int): Gaps between heatmap tiles.
+    - colorbarlen (int): Length of the colorbar in pixels.
+    - colorscale (list): Optional custom colorscale.
+    - colorbar_title (str): Title for the colorbar.
+
+    Returns:
+    - fig (go.Figure): Plotly heatmap figure.
+    """
+
     if colorscale is None:
+        # Default ternary colorscale (red, green, blue)
         colorscale = [
-            [0, colors['red']],
-            [0.1, colors['red']],
-            [0.1, colors['red']],
-            [0.2, colors['red']],
-            [0.2, colors['red']],
-            [0.3, colors['red']],
-
-            [0.3,  colors['green']],
-            [0.4,  colors['green']],
-
-            [0.4,  colors['green']],
-            [0.5,  colors['green']],
-
-            [0.5,  colors['green']],
-            [0.6,  colors['green']],
-
-            [0.6, colors['green']],
-            [0.7, colors['green']],
-
-            [0.7, colors['blue']],
-            [0.8, colors['blue']],
-
-            [0.8, colors['blue']],
-            [0.9, colors['blue']],
-
-            [0.9, colors['blue']],
-            [1.0, colors['blue']]
+            [0.0, colors['red']], [0.3, colors['red']],
+            [0.3, colors['green']], [0.7, colors['green']],
+            [0.7, colors['blue']], [1.0, colors['blue']]
         ]
 
-    fig.add_trace(go.Heatmap(y=df.index,
-                             x=df.columns,
-                             z=df.values,
-                             hoverongaps=False,
-                             colorscale=colorscale,
-                             zmin=zmin,
-                             zmax=zmax,
-                             hovertemplate='Proposal ID' +
-                             ': %{x}<br>' + 'Voter' + ': %{y}<br>' +
-                             'Vote'+': %{z}<extra></extra>',
-                             ))
+    fig = go.Figure(layout=get_plotly_layout(width=1540, height=380))
 
-    fig.update_traces(showscale=True,
-                      colorbar=dict(lenmode='pixels',
-                                    len=colorbarlen,
-                                    thickness=15,
-                                    tickvals=tickvals,
-                                    ticktext=ticktext,
-                                    title='',
-                                    orientation='h',
-                                    xanchor='center',
-                                    x=0.5,
-                                    yanchor='top',
-                                    y=1.25),
-                      xgap=xgap, ygap=ygap)
+    # Add heatmap trace
+    fig.add_trace(go.Heatmap(
+        y=df.index,
+        x=df.columns,
+        z=df.values,
+        hoverongaps=False,
+        colorscale=colorscale,
+        zmin=zmin,
+        zmax=zmax,
+        hovertemplate='Proposal ID: %{x}<br>Voter: %{y}<br>Vote: %{z}<extra></extra>',
+        xgap=xgap,
+        ygap=ygap,
+        showscale=True,
+        colorbar=dict(
+            lenmode='pixels',
+            len=colorbarlen,
+            thickness=15,
+            tickvals=tickvals,
+            ticktext=ticktext,
+            title=colorbar_title,
+            orientation='h',
+            xanchor='center',
+            x=0.5,
+            yanchor='top',
+            y=1.25
+        )
+    ))
 
+    # Update layout
     fig.update_layout(
         xaxis_title='Proposal ID',
         yaxis_title='Voter',
-        legend=dict(xanchor='center', x=0.5, y=1.1, orientation='h'),
         xaxis=dict(tickmode='linear', tick0=0, dtick=20),
+        legend=dict(xanchor='center', x=0.5, y=1.1, orientation='h')
     )
 
     return fig
