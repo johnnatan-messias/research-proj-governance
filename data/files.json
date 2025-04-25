@@ -35,6 +35,7 @@
         "block_timestamp__9600000_20563001.csv.gz"
     ],
     "others": [
-        "yahoo_price_eth_usd.csv"
+        "yahoo_price_eth_usd.csv",
+        "transactions_of_votes.csv.gz"
     ]
 }
