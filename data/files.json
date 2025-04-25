@@ -1,0 +1,40 @@
+{
+    "compound": [
+        "approval_df.csv.gz",
+        "delegatechanged_df.csv.gz",
+        "delegatevoteschanged_df.csv.gz",
+        "proposal_cancelled_df.csv.gz",
+        "proposal_created_df.csv.gz",
+        "proposal_executed_df.csv.gz",
+        "proposal_voting_delay_df.csv.gz",
+        "proposal_voting_period_df.csv.gz",
+        "proposals_queued_df.csv.gz",
+        "supporters_df.csv.gz",
+        "transfer_df.csv.gz",
+        "votes_df.csv.gz",
+        "votes_weighted_df.csv.gz"
+    ],
+    "uniswap": [
+        "approval_df.csv.gz",
+        "delegatechanged_df.csv.gz",
+        "delegatevoteschanged_df.csv.gz",
+        "minterchanged_df.csv.gz",
+        "proposal_cancelled_df.csv.gz",
+        "proposal_created_df.csv.gz",
+        "proposal_executed_df.csv.gz",
+        "proposals_queued_df.csv.gz",
+        "supporters_df.csv.gz",
+        "transfer_df.csv.gz",
+        "votes_df.csv.gz",
+        "votes_weighted_df.csv.gz"
+    ],
+    "labels": [
+        "labels.json"
+    ],
+    "blocks": [
+        "block_timestamp__9600000_20563001.csv.gz"
+    ],
+    "others": [
+        "yahoo_price_eth_usd.csv"
+    ]
+}
